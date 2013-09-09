@@ -163,6 +163,40 @@ function camplus_pr_undraft($node) {
     $node->uid = $temp;
     // $node->field_pr_author[LANGUAGE_NONE][0]['target_id'] = $tempuid;
   }
+
+   //add role after value begin
+
+    $camplus_pr_range_settings = variable_get('camplus_pr_range_settings');
+    // global $debug; 
+    // dpm($total,'total');
+    // if($debug) dpm($camplus_pr_range_settings,'$camplus_pr_range_settings');
+    foreach ($camplus_pr_range_settings as $key => $value) {
+      if($value['end']-$total >= 0) {
+        $approve_rang = $key; //the $key+1 group settings.
+        break;
+      }
+    }
+    // $approve_status['approve_rang'] = $approve_rang;
+    $workflow_settings = variable_get('camplus_pr_workflow_settings', '');
+    //the first one is head,shift it!
+    // dpm($workflow_settings,$approve_rang);
+    $workflow_settings_node = $workflow_settings[$approve_rang];  
+    $node->field_pr_role_involved[LANGUAGE_NONE][0]['value'] = serialize($workflow_settings_node);
+    // dpm($workflow_settings_node,'$workflow_settings_node2');
+    $workflow_settings_node = array_filter($workflow_settings_node);
+
+    $workflow_settings_node = array_keys($workflow_settings_node);
+    // dpm($workflow_settings_node,'$workflow_settings_node');
+    if(isset($workflow_settings_node[1])){
+      //0 5 header
+      //1 6 manager
+      //2 7 principal
+      //3 8 borad
+      $node->field_pr_rid_after[LANGUAGE_NONE][0]['value'] = $workflow_settings_node[1];//6
+    }
+    // dpm($node,'123');
+  //add role after value  end
+
   node_save($node);
   // actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a2 = NULL)
   drupal_goto('node/'.$node->nid);
