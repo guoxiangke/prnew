@@ -131,6 +131,14 @@ function camplus_pr_range_settings_form() {
  $range = variable_get('camplus_pr_settings_range', '5');
  $range_settings = variable_get('camplus_pr_range_settings', ''); 
  while($i<$range){
+    $camplus_pr_file_settings = variable_get('camplus_pr_file_settings');
+    if(!isset($range_settings[$i])) {
+      $range_settings[$i]["begin"] = '';
+      $range_settings[$i]["end"] = '';
+      $camplus_pr_file_settings["pr_quofile_require_$i"] = 0;
+      $camplus_pr_file_settings["pr_quo_file_no_$i"] = 0;
+      $camplus_pr_file_settings["pr_ref_file_require_$i"] =0;
+    }
     $form[$i]['range']["pr_range_begin_$i"] = array(
       '#type' => 'textfield',
       '#default_value' =>$range_settings[$i]["begin"],
@@ -143,7 +151,7 @@ function camplus_pr_range_settings_form() {
       '#prefix' => 'HK$',
       '#size' => 20, 
     );
-    $camplus_pr_file_settings = variable_get('camplus_pr_file_settings');
+    
     $form[$i]["pr_quofile_require_$i"] = array(
       '#type' => 'checkbox',
       '#default_value' => $camplus_pr_file_settings["pr_quofile_require_$i"],
@@ -397,7 +405,12 @@ function theme_camplus_pr_approve_settings_form($variables) {
 
   for($i = 0; $i < $count_rows; $i++) {
     $row = array();
-    $row[] = $range_settings[$i]["begin"] .'--'. $range_settings[$i]["end"];
+    if(isset($range_settings[$i])) {
+      $row[] = $range_settings[$i]["begin"] .'--'. $range_settings[$i]["end"];
+    }
+    else {
+      $row[] = '0--0';
+    }
     foreach ($order as $key => $role) {
       $row[] = drupal_render($form[$i][$i.'-workflow-'.$role['rid']]);
     }
