@@ -306,12 +306,38 @@ function rate_pr_votingapi_insert($votes) {
     //   $node->field_pr_status[LANGUAGE_NONE][0]['value'] = 4;
     //   node_save($node);
     // }
+    //field_pr_rid_after setting begin!
+      //0 5 header
+      //1 6 manager
+      //2 7 principal
+      //3 8 borad
+    $role_involved = unserialize($node->field_pr_role_involved[LANGUAGE_NONE][0]['value']);
+    $workflow_settings_node = array_filter($role_involved);
+    $workflow_settings_node = array_keys($workflow_settings_node);
+
+    watchdog('workflow_settings_node', 'workflow_settings_node <pre>'.print_r($workflow_settings_node,TRUE), array(), WATCHDOG_NOTICE, 'link');
+    // _rate_pr_check_permissions begin
+      if($node->type == 'purchase_request') {
+
+        if(isset($node->field_pr_status[LANGUAGE_NONE][0]['value']) && $node->field_pr_status[LANGUAGE_NONE][0]['value'] == 3) {
+          //check if all approved. if so ,change status to 4.
+          $widget = _camplus_pr_get_approve_rate($node);
+          if(!isset($widget->id)) return;
+          $approve_status = _rate_pr_check_permissions($node,$widget);
+        }
+      }
+    // _rate_pr_check_permissions end
+    watchdog('approve_status00000', '<pre>'.print_r($approve_status,TRUE), array(), WATCHDOG_NOTICE, 'link');
+    $next_rid = $workflow_settings_node[$approve_status['approved_counts']+1]?$workflow_settings_node[$approve_status['approved_counts']+1]:0;
+    $node->field_pr_rid_after[LANGUAGE_NONE][0]['value'] = $next_rid;//7
+    watchdog('field_pr_rid_after11111', $next_rid, array(), WATCHDOG_NOTICE, 'link');
+    node_save($node);
+  //field_pr_rid_after setting end!
   }else {//You voted 'reject'.
     $node->field_pr_status[LANGUAGE_NONE][0]['value'] = 5;
     node_save($node);
   }
 }
-
 /**
  * Preprocess function for the yesno template.
  * @see rate_preprocess_rate_template_yesno

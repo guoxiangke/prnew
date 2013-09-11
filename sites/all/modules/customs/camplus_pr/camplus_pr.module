@@ -894,6 +894,7 @@ function node_access4camplus_pr($op, $node, $account = NULL) {
  */
 function camplus_pr_flag_access($flag, $content_id, $action, $account) {
   global $debug;
+  dpm($flag);
   if($flag->name == 'cancel' || $flag->name == 'paid') {
     $node = node_load($content_id);
     // if($node->uid != $account->uid) return;

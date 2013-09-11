@@ -95,7 +95,7 @@ function rate_pr_rules_action_info() {
     'rate_pr_action_email' => array(
       'label' => t('1.Email to specific addr when mixable/locked.'),
       'arguments' => array(
-        'new_answer' => array('type' => 'node', 'label' => t('The new answer someone gives.')),
+        'new_answer' => array('type' => 'node', 'label' => t('The node.')),
       ),
       'module' => 'rate_pr',
       'group' => t('Customs'),
@@ -155,6 +155,7 @@ function rete_pr_og_rules_add_entitys_to_group(EntityDrupalWrapper $entity, Enti
   // 5|Rejected
   // 6|Completed
   // 7|Cancelled
+  // 1.Email to specific addr when locked.
 function rate_pr_action_email($node) {
    //Provide the the old answer as parameter to unflag?
    //do something, no return.
@@ -177,8 +178,8 @@ function rate_pr_action_email($node) {
   // into the form, which include the message body in $form_values['message'].
   $params = array(
     'subject' => $node->title,
-    'message' => "<p>Hello World</p>",
-    'body' => "<p>Hello World</p>",
+    'message' => "The purchase request of $node->title is locked. Please go to ".url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=pr/locked')." to review it.",
+    'body' => "The purchase request of $node->title is locked. Please go to ".url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=pr/locked')." to review it.",
   );
   // The language of the e-mail. This will one of three values:
   // * user_preferred_language(): Used for sending mail to a particular website
