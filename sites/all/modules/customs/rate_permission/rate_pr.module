@@ -86,9 +86,9 @@ function _rate_pr_check_permissions($node, $widget, $user = NULL) {
     }
     $approve_status['approve_rang'] = $approve_rang;
     $workflow_settings = variable_get('camplus_pr_workflow_settings');
-    // if($debug) dpm($approve_rang,'approve_rang');
+    // if($debug) dpm($workflow_settings,$approve_rang);
     $workflow_settings = $workflow_settings[$approve_rang];
-    // if($debug) dpm($workflow_settings,'workflow_settings');
+    
     $rate_results = rate_get_results('node', $node->nid, $widget->id);
 
     if($rate_results['options']['-1']) {   //attention -1,can not change.

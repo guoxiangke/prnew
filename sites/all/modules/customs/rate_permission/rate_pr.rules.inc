@@ -57,6 +57,7 @@ function rate_pr_condition_all_approved($node) {
 function rate_pr_condition_lock($node) {
   //global setting of lock
   if(!variable_get('camplus_pr_lock_function_enable', '0')) {
+    watchdog('locked pr1', 'FALSE', array(), WATCHDOG_NOTICE, 'link');
     return FALSE;
   }
   //指定角色 unlock时 fix
@@ -66,7 +67,14 @@ function rate_pr_condition_lock($node) {
     return FALSE;
   }
   $bis_info_all = get_bis_info_all($node->field_budget_items[LANGUAGE_NONE][0]['target_id']);
-  if($bis_info_all['f'] < 0) {
+  $field_budget_items_amount = 0;
+  foreach ($node->field_budget_items_amount[LANGUAGE_NONE] as $key => $value) {
+    $field_budget_items_amount +=  $value['value'];
+  }
+  $total = $field_budget_items_amount + $node->field_payment_from_students[LANGUAGE_NONE][0]['value'];
+
+  watchdog('locked pr1', '<pre>'.print_r($bis_info_all,TRUE), array(), WATCHDOG_NOTICE, 'link');
+  if($bis_info_all['f'] < 0 || $bis_info_all['f'] < $total) {
     watchdog('locked pr1', 'message', array(), WATCHDOG_NOTICE, 'link');
     return TRUE;
   }

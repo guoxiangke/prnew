@@ -4,23 +4,23 @@
  */
 function druedu_user_tree_menu() {
  $items = array();
-  $items['admin/config/camplus/advanced_management/department/bi'] = array(
-    'title' => 'Advanced Management',
-    'page callback' => 'druedu_public_group_add_page',
-    'access arguments' => array('administer users'),
-    'weight' => 7,
-    'type' => MENU_LOCAL_TASK,
-  );
+  // $items['admin/config/camplus/advanced_management/department/bi'] = array(
+  //   'title' => 'Advanced Management',
+  //   'page callback' => 'druedu_public_group_add_page',
+  //   'access arguments' => array('administer users'),
+  //   'weight' => 7,
+  //   'type' => MENU_LOCAL_TASK,
+  // );
 
 
-  $items['admin/config/camplus/advanced_management/export'] = array(
-    'title' => 'export school group data',
-    'page callback' => 'druedu_user_group_template_generate',
-    'page arguments' => array('school_department'),
-    'access arguments' => array('administer users'),
-    'weight' => 7,
-    'type' => MENU_CALLBACK,
-  );
+  // $items['admin/config/camplus/advanced_management/export'] = array(
+  //   'title' => 'export school group data',
+  //   'page callback' => 'druedu_user_group_template_generate',
+  //   'page arguments' => array('school_department'),
+  //   'access arguments' => array('administer users'),
+  //   'weight' => 7,
+  //   'type' => MENU_CALLBACK,
+  // );
   return $items;
 }
 

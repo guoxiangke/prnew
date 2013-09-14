@@ -142,6 +142,7 @@ function camplus_pr_undraft($node) {
     }
   }
   $node->status = 1;
+  $node->changed = time();
   // 1|Draft
   // 2|Locked
   // 3|Pending
@@ -198,7 +199,6 @@ function camplus_pr_undraft($node) {
   //add role after value  end
 
   node_save($node);
-  // actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a2 = NULL)
   drupal_goto('node/'.$node->nid);
 }
 function camplus_pr_status_update($vid, $status_id) {
@@ -652,6 +652,10 @@ function form_process_field_budget_items(&$element) {
           $node = node_load($budget_item_nid);
 
           if(!$node) continue;
+          // //expect locked prs
+          // if($pr_node->field_pr_status[LANGUAGE_NONE][0]['value'] == 2) {
+          //   continue;
+          // }
           $element['#options'][$budget_item_nid] = $node->title .' - '. $node->body[LANGUAGE_NONE][0]['safe_value'];
           //去除不是当前学年的
           if(!isset($node->field_financial_year[LANGUAGE_NONE][0]['value']) || $node->field_financial_year[LANGUAGE_NONE][0]['value'] != camplus_pr_get_current_financial_year() ){
@@ -739,7 +743,7 @@ function camplus_pr_admin_paths_alter(&$paths) {
  * Implements hook_init().
  */
 function camplus_pr_init() {
-  $GLOBALS['debug'] = FALSE;
+  $GLOBALS['debug'] = TRUE;
   $public_groups = druedu_user_get_nodes_by_group('school_department');
   $variables = array();
   foreach ($public_groups as $g_nid => $g_node) {
@@ -765,6 +769,7 @@ function camplus_pr_get_current_financial_year(){
   }
   return  $financial_year;
 }
+//seems no user.
 function camplus_pr_approve_flag_generate($key) {
   $flags = array();
   // Exported flag: "Bookmarks".
@@ -894,7 +899,6 @@ function node_access4camplus_pr($op, $node, $account = NULL) {
  */
 function camplus_pr_flag_access($flag, $content_id, $action, $account) {
   global $debug;
-  dpm($flag);
   if($flag->name == 'cancel' || $flag->name == 'paid') {
     $node = node_load($content_id);
     // if($node->uid != $account->uid) return;
@@ -1067,7 +1071,10 @@ function get_bis_info_all($budget_nid) {
          if($debug) dpm('canceled pr:'.$nid,__LINE__);
          continue;
       }
-
+      //expect locked prs
+      // if($pr_node->field_pr_status[LANGUAGE_NONE][0]['value'] == 2) {
+      //   continue;
+      // }
      $widgets = rate_get_active_widgets('node', $pr_node->type);
      //get pr item
      foreach ($pr_node->field_budget_items[LANGUAGE_NONE] as $key => $value) {

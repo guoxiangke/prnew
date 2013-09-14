@@ -13,6 +13,14 @@
 			     	$('#fgm_node_purchase_request_form_group_ref_supplier-add-more-wrapper').slideDown();
 			     }
 			 });
+ 			$('#edit-field-pr-for-tender-und').change(function() {
+			     if(this.checked) {
+			         // do something when checked
+			        $('#fgm_node_purchase_request_form_group_ref_supplier-add-more-wrapper').slideUp();
+			     }else {
+			     	$('#fgm_node_purchase_request_form_group_ref_supplier-add-more-wrapper').slideDown();
+			     }
+			 });
 	Drupal.behaviors.pr = {
 		attach: function(context, settings) {
 			$('#fgm_node_purchase_request_form_group_budgets-add-more-wrapper select').change(function(){

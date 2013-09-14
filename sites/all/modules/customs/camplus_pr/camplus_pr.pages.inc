@@ -678,6 +678,10 @@ function theme_camplus_pr_budget_settings_form($variables) {
               if($debug) dpm('canceled pr:'.$nid,__LINE__);
                continue;
             }
+            //expect locked prs
+            // if($pr_node->field_pr_status[LANGUAGE_NONE][0]['value'] == 2) {
+            //   continue;
+            // }
            //get pr item
            foreach ($pr_node->field_budget_items[LANGUAGE_NONE] as $key => $value) {
             if($value['target_id'] ==  $budget_nid) {
