@@ -622,12 +622,27 @@ function camplus_pr_field_widget_form_alter(&$element, &$form_state, $context) {
   }
 }
 function form_process_field_budget_items(&$element) {
+
     if(strpos($element['#id'], 'field-budget-items-und')  !== FALSE ) {
         //如果角色不是管理角色，只显示所属部门的子预算项目
         global $user;
+        $donext = TRUE;
         $rid = variable_get('camplus_pr_help_role', '6');
-dpm($user->roles,$rid);
-        if(!user_access('camplus budget cross sectoral')) { //||  !in_array($rid, array_keys($user->roles))
+        //filter~
+        //如果用户是helper但是没打开开关，unset all！
+        if(in_array($rid, array_keys($user->roles))) {
+          if(!variable_get('camplus_pr_help_staff_enable', '0')) {
+            $donext = FALSE;
+            $element['#options'] = array();
+            $element['#options']['_none'] = t('- Select a value -');
+            $element['#default_value'] = '_none';
+            return $element;
+          }
+          dpm($donext);
+        }
+        //end
+
+        if(!user_access('camplus budget cross sectoral') && $donext ) { 
           // Load in the current user's group entity ID's
           $department = array();
           if(!in_array($rid, array_keys($user->roles))) {
