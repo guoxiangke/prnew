@@ -26,6 +26,9 @@ function rate_pr_node_view($node, $view_mode, $langcode) {
     }
     //end header变更
       
+    //20130922 no.5bug
+    if($node->status == 0) $show_flag = FALSE;
+    //
     // Adding the form to the node view
     $widgets = rate_get_active_widgets('node', $node->type, $view_mode);
     foreach ($widgets as $widget_id => $widget) {
