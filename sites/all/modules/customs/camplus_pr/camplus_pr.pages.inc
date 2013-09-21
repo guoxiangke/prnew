@@ -756,8 +756,8 @@ function theme_camplus_pr_budget_settings_form($variables) {
           }
         }
 
-        
-        if(user_access('camplus budget settings') || in_array('administrator',$user->roles)) {
+        //edit-edit-any-budget-item-content         //edit any $type content// if(user_access('camplus budget settings') || in_array('administrator',$user->roles)) {
+        if(user_access('edit any budget_item content') || in_array('administrator',$user->roles)) {
           $row[] = l(t('setting'), 'node/' . $gid.'/edit');
         }
         $rows[$gid] = array('data' => $row, 'class' => array('draggable','locked'));
