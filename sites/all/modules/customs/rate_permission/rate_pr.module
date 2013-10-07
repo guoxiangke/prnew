@@ -126,6 +126,17 @@ function _rate_pr_check_permissions($node, $widget, $user = NULL) {
         break;
       }
     }
+        ////////////////////////////
+          $before_role_counts = 0;
+          foreach (array_filter($workflow_settings) as $w_rid => $value) {
+            if( $w_rid == $rid ){break;}
+              $before_role_counts ++;
+          }
+          $approve_status['before_role_counts'] = $before_role_counts;
+          $approve_status['approved_counts'] = $rate_results['options']['1'];
+          $approve_status['reject_counts'] = $rate_results['options']['-1'];
+        ////////////////////////////
+
     if($flag_role_involved){
       $approve_status['approve_level'] = $rid;
     }else{
@@ -185,14 +196,7 @@ function _rate_pr_check_permissions($node, $widget, $user = NULL) {
           if($debug) dpm(array_filter($workflow_settings));
           if($debug) dpm($first_roles,'fist');
 
-          $before_role_counts = 0;
-          foreach (array_filter($workflow_settings) as $w_rid => $value) {
-            if( $w_rid == $rid ){break;}
-              $before_role_counts ++;
-          }
-          $approve_status['before_role_counts'] = $before_role_counts;
-          $approve_status['approved_counts'] = $rate_results['options']['1'];
-          $approve_status['reject_counts'] = $rate_results['options']['-1'];
+
           if($debug) dpm( $rid.' '.$role.' 上面还有'.$before_role_counts.'级部门&&已经有'.$rate_results['options']['1'].'个部门同意了。');
           foreach (array_filter($workflow_settings) as $w_rid => $value) {
             if($w_rid == $first_roles->rid) continue;
@@ -338,6 +342,14 @@ function rate_pr_votingapi_insert($votes) {
         }
       }
     // _rate_pr_check_permissions end
+     // workflow_settings_node
+     //  Array
+     //  (
+     //      [0] => 5
+     //      [1] => 6
+     //      [2] => 7
+     //      [3] => 8
+     //  ) 
     watchdog('approve_status00000', '<pre>'.print_r($approve_status,TRUE), array(), WATCHDOG_NOTICE, 'link');
     $next_rid = isset($workflow_settings_node[$approve_status['approved_counts']+2])?$workflow_settings_node[$approve_status['approved_counts']+2]:0;
     $node->field_pr_rid_after[LANGUAGE_NONE][0]['value'] = $next_rid;//7

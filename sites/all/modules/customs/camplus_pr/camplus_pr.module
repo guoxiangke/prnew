@@ -11,7 +11,7 @@ function camplus_pr_menu() {
     'position' => 'left',
     'weight' => -20,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
@@ -19,14 +19,14 @@ function camplus_pr_menu() {
     'title' => t('PR settings'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('camplus_pr_settings_form'),
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
     'file' => 'camplus_pr.pages.inc',
   );
   $items['admin/config/camplus/pr_settings/rang_count'] = array(
     'title' => t('Basic Setting'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('camplus_pr_settings_form'),
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
     'file' => 'camplus_pr.pages.inc',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' =>-28,
@@ -37,7 +37,7 @@ function camplus_pr_menu() {
     'title' => t('PR range settings'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('camplus_pr_range_settings_form'),
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
     'file' => 'camplus_pr.pages.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' =>-27,
@@ -46,7 +46,7 @@ function camplus_pr_menu() {
 		'title' => t('PR roles involved'),
 		'page callback' => 'drupal_get_form',
     'page arguments' => array('camplus_pr_roles_involved_settings_form'),
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
 		'file' => 'camplus_pr.pages.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' =>-26,
@@ -55,7 +55,7 @@ function camplus_pr_menu() {
     'title' => t('PR roles weight'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('camplus_pr_roles_weight_settings_form'),
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
     'file' => 'camplus_pr.pages.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' =>-25,
@@ -64,7 +64,7 @@ function camplus_pr_menu() {
     'title' => t('Approval Workflow'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('camplus_pr_approve_settings_form'),
-    'access arguments' => array('camplus bi settings'),
+    'access arguments' =>  array('camplus pr settings'),
     'file' => 'camplus_pr.pages.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' =>-24,
@@ -270,11 +270,11 @@ function camplus_pr_permission() {
       'title' => t('Approval for Purchase Request'),//审批资格 权限 View My Approve.Camplus Purchase Request approvable即审批资格 权限
       'restrict access' => TRUE,
     ),
-    'camplus budget settings' =>  array(
-      'title' => t('Camplus BI Settings'),//书记 权限 预算设置
+    'camplus pr settings' =>  array(
+      'title' => t('Camplus PR Settings'),//书记 权限 预算设置
       'restrict access' => TRUE,
     ),
-    'camplus budget cross sectoral' =>  array(
+    'camplus office submission' =>  array(
       'title' => t('Non-Departmental Submission for Purchase Request'),//跨部门 add 预算 
       'restrict access' => TRUE,
       'description' => t('Make sure the role who has this premission can create PR!')
@@ -658,8 +658,6 @@ function form_process_field_budget_items(&$element) {
               }
             }
           }
-     
-
         $budget_items = $element['#options'];
 
         if(isset($budget_items) && is_array($budget_items))
@@ -716,6 +714,11 @@ function form_process_field_budget_items(&$element) {
         }
       }
     }
+
+     
+
+  if(count($element['#options']) == 1)
+            drupal_set_message(t('You are not belong to any Department currently. You CANNOT submit PR.'), 'error', FALSE);
   return  $element;
 }
 /**
@@ -759,7 +762,7 @@ function camplus_pr_admin_paths_alter(&$paths) {
  * Implements hook_init().
  */
 function camplus_pr_init() {
-  $GLOBALS['debug'] = TRUE;
+  $GLOBALS['debug'] = FALSE;
   $public_groups = druedu_user_get_nodes_by_group('school_department');
   $variables = array();
   foreach ($public_groups as $g_nid => $g_node) {

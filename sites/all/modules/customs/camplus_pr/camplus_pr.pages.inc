@@ -293,7 +293,7 @@ function camplus_pr_settings_form() {
     '#type' => 'select',
     '#title' => t('Choose which Role to execute Submission for others:'),
     '#default_value' => variable_get('camplus_pr_help_role', '6'),
-    '#options' => user_roles(TRUE,'create purchase_request content'),
+    '#options' => user_roles(TRUE,'camplus office submission'),
     '#description' => '',
     '#required' => TRUE,
   ); 
